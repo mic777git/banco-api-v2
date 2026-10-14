@@ -92,3 +92,12 @@ class TransferSerializer(serializers.Serializer):
             )
 
         return origin
+
+
+
+class StatementSerializer(serializers.ModelSerializer):
+    account_id = serializers.IntegerField(source='account.id', read_only=True)
+
+    class Meta:
+        model = Transaction
+        fields = ['id', 'account_id', 'type', 'amount', 'related_account', 'timestamp']

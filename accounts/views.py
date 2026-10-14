@@ -38,3 +38,16 @@ class AccountViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(AccountSerializer(account).data, status=status.HTTP_200_OK)
+
+
+from rest_framework import generics
+from .models import Transaction
+from .serializers import StatementSerializer
+
+
+class StatementView(generics.ListAPIView):
+    serializer_class = StatementSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Transaction.objects.filter(account__user=self.request.user).order_by('-timestamp')
